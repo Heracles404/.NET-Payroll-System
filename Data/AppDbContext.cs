@@ -10,5 +10,12 @@ public class AppDbContext: DbContext
     {
     }
     
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Employee>()
+            .Property(e => e.DateOfBirth)
+            .HasColumnType("date");
+    }
+    
     public DbSet<Employee> Employees => Set<Employee>();
 }
