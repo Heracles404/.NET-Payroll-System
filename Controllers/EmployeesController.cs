@@ -1,15 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using _NET_Payroll_System.DTOs;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NET_Payroll_System.Data;
 using NET_Payroll_System.Models;
-using Microsoft.EntityFrameworkCore;
 
-namespace NET_Payroll_System.Controllers;
+namespace _NET_Payroll_System.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class EmployeesController : ControllerBase
 {
     private readonly AppDbContext _context;
+
+    // Allowed working days
+    private readonly string[] _allowedWorkingDays = { "MWF", "TTHS" };
 
     public EmployeesController(AppDbContext context)
     {
@@ -19,6 +23,12 @@ public class EmployeesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(Employee employee)
     {
+        // Validate WorkingDays
+        if (!_allowedWorkingDays.Contains(employee.WorkingDays))
+        {
+            return BadRequest("WorkingDays must be either 'MWF' or 'TTHS'.");
+        }
+
         // Ensure UTC date
         employee.DateOfBirth = DateTime.SpecifyKind(employee.DateOfBirth, DateTimeKind.Utc);
 
@@ -57,6 +67,49 @@ public class EmployeesController : ControllerBase
             return NotFound();
 
         // Return the employee data
+        return Ok(employee);
+    }
+    
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> Patch(int id, EmployeeDto dto)
+    {
+        var employee = await _context.Employees.FindAsync(id);
+
+        if (employee == null)
+            return NotFound();
+
+        // Update allowed fields only
+
+        if (!string.IsNullOrEmpty(dto.FirstName))
+            employee.FirstName = dto.FirstName;
+
+        if (!string.IsNullOrEmpty(dto.LastName))
+            employee.LastName = dto.LastName;
+
+        if (!string.IsNullOrEmpty(dto.MiddleName))
+            employee.MiddleName = dto.MiddleName;
+
+        if (dto.DailyRate.HasValue)
+            employee.DailyRate = dto.DailyRate.Value;
+
+        if (!string.IsNullOrEmpty(dto.WorkingDays))
+        {
+            // Validate WorkingDays
+            if (!_allowedWorkingDays.Contains(dto.WorkingDays))
+            {
+                return BadRequest("WorkingDays must be either 'MWF' or 'TTHS'.");
+            }
+
+            employee.WorkingDays = dto.WorkingDays;
+        }
+
+        // ❗ Do NOT update:
+        // employee.EmployeeNumber
+        // employee.DateOfBirth
+        // employee.ID
+
+        await _context.SaveChangesAsync();
+
         return Ok(employee);
     }
 }
