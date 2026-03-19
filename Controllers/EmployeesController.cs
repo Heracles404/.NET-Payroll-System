@@ -16,13 +16,6 @@ public class EmployeesController : ControllerBase
         _context = context;
     }
     
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
-    {
-        var employees = await _context.Employees.ToListAsync();
-        return Ok(employees);
-    }
-    
     [HttpPost]
     public async Task<IActionResult> Create(Employee employee)
     {
@@ -43,6 +36,27 @@ public class EmployeesController : ControllerBase
         _context.Employees.Add(employee);
         await _context.SaveChangesAsync();
 
+        return Ok(employee);
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var employees = await _context.Employees.ToListAsync();
+        return Ok(employees);
+    }
+    
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        // Find employee by primary key (ID)
+        var employee = await _context.Employees.FindAsync(id);
+
+        // If not found, return 404
+        if (employee == null)
+            return NotFound();
+
+        // Return the employee data
         return Ok(employee);
     }
 }
