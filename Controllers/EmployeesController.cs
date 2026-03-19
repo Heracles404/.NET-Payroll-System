@@ -26,6 +26,20 @@ public class EmployeesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(Employee employee)
     {
+        // Ensure UTC date
+        employee.DateOfBirth = DateTime.SpecifyKind(employee.DateOfBirth, DateTimeKind.Utc);
+
+        // Generate Employee Number
+        var prefix = employee.LastName.Length >= 3
+            ? employee.LastName.Substring(0, 3).ToUpper()
+            : employee.LastName.ToUpper().PadRight(3, '*');
+
+        var random = new Random().Next(0, 99999).ToString("D5");
+
+        var dobFormatted = employee.DateOfBirth.ToString("ddMMMyyyy").ToUpper();
+
+        employee.EmployeeNumber = $"{prefix}-{random}-{dobFormatted}";
+
         _context.Employees.Add(employee);
         await _context.SaveChangesAsync();
 

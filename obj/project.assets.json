@@ -2211,11 +2211,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\.NET-Payroll-System\\.NET-Payroll-System.csproj",
+      "projectUniqueName": "C:\\Users\\bncnz\\OneDrive\\Desktop\\.NET-Payroll-System\\.NET-Payroll-System.csproj",
       "projectName": ".NET-Payroll-System",
-      "projectPath": "C:\\.NET-Payroll-System\\.NET-Payroll-System.csproj",
+      "projectPath": "C:\\Users\\bncnz\\OneDrive\\Desktop\\.NET-Payroll-System\\.NET-Payroll-System.csproj",
       "packagesPath": "C:\\Users\\bncnz\\.nuget\\packages\\",
-      "outputPath": "C:\\.NET-Payroll-System\\obj\\",
+      "outputPath": "C:\\Users\\bncnz\\OneDrive\\Desktop\\.NET-Payroll-System\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\bncnz\\AppData\\Roaming\\NuGet\\NuGet.Config"
