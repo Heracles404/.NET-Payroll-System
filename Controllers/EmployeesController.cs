@@ -21,41 +21,17 @@ public class EmployeesController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<IActionResult> Create(Employee employee)
+    public async Task<IActionResult> Create(EmployeeCreateDto dto)
     {
-        var missingFields = new List<string>();
-
-        // Collect missing/invalid fields
-
-        if (string.IsNullOrEmpty(employee.FirstName))
-            missingFields.Add("FirstName");
-
-        if (string.IsNullOrEmpty(employee.LastName))
-            missingFields.Add("LastName");
-
-        if (employee.DateOfBirth == default)
-            missingFields.Add("DateOfBirth");
-
-        if (employee.DailyRate <= 0)
-            missingFields.Add("DailyRate");
-
-        if (string.IsNullOrEmpty(employee.WorkingDays))
-            missingFields.Add("WorkingDays");
-
-        // If any required fields are missing, return all at once
-        if (missingFields.Count > 0)
+        var employee = new Employee
         {
-            return BadRequest($"Missing or invalid parameters: {string.Join(", ", missingFields)}");
-        }
-
-        // Validate WorkingDays
-        if (!_allowedWorkingDays.Contains(employee.WorkingDays))
-        {
-            return BadRequest("WorkingDays must be either 'MWF' or 'TTHS'.");
-        }
-
-        // Ensure UTC date
-        employee.DateOfBirth = DateTime.SpecifyKind(employee.DateOfBirth, DateTimeKind.Utc);
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            MiddleName = dto.MiddleName,
+            DateOfBirth = DateTime.SpecifyKind(dto.DateOfBirth, DateTimeKind.Utc),
+            DailyRate = dto.DailyRate,
+            WorkingDays = dto.WorkingDays
+        };
 
         // Generate Employee Number
         var prefix = employee.LastName.Length >= 3
@@ -63,7 +39,6 @@ public class EmployeesController : ControllerBase
             : employee.LastName.ToUpper().PadRight(3, '*');
 
         var random = new Random().Next(0, 99999).ToString("D5");
-
         var dobFormatted = employee.DateOfBirth.ToString("ddMMMyyyy").ToUpper();
 
         employee.EmployeeNumber = $"{prefix}-{random}-{dobFormatted}";
