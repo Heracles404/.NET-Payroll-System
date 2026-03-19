@@ -1,7 +1,7 @@
 ﻿<h3>ASP.NET API</h3>
 >**Running the Program**</br>
 ``>> dotnet build`` </br>
-``>> dotnet run`` 
+``>> dotnet run`` or ``>> dotnet watch run``
 
 >**Install dotnet tools globally (If cannot Run Migrations due to PATH Error)** </br>
 ``>> dotnet tool install --global dotnet-ef``</br>

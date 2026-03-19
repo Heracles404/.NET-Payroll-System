@@ -22,4 +22,13 @@ public class EmployeesController : ControllerBase
         var employees = await _context.Employees.ToListAsync();
         return Ok(employees);
     }
+    
+    [HttpPost]
+    public async Task<IActionResult> Create(Employee employee)
+    {
+        _context.Employees.Add(employee);
+        await _context.SaveChangesAsync();
+
+        return Ok(employee);
+    }
 }
