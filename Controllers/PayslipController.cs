@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NET_Payroll_System.Data;
 
 namespace NET_Payroll_System.Controllers;
@@ -14,11 +15,12 @@ public class PayslipController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> ComputePay(int id, DateTime startDate, DateTime endDate)
+    [HttpGet("{employeeNumber}")]
+    public async Task<IActionResult> ComputePay(string employeeNumber, DateTime startDate, DateTime endDate)
     {
-        // Finds the employee details based on ID
-        var employee = await _context.Employees.FindAsync(id);
+        // Finds the employee details based on EmployeeNumber
+        var employee = await _context.Employees
+            .FirstOrDefaultAsync(e => e.EmployeeNumber == employeeNumber);
 
         // If employee does not exist, return 404
         if (employee == null)
