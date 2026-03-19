@@ -56,11 +56,11 @@ public class EmployeesController : ControllerBase
         return Ok(employees);
     }
     
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    [HttpGet("{employeeNumber}")]
+    public async Task<IActionResult> GetByEmployeeNumber(string employeeNumber)
     {
-        // Find employee by primary key (ID)
-        var employee = await _context.Employees.FindAsync(id);
+        // Find employee by employeeNumber
+        var employee = await _context.Employees.FindAsync(employeeNumber);
 
         // If not found, return 404
         if (employee == null)
@@ -70,10 +70,10 @@ public class EmployeesController : ControllerBase
         return Ok(employee);
     }
     
-    [HttpPatch("{id}")]
-    public async Task<IActionResult> Patch(int id, EmployeeDto dto)
+    [HttpPatch("{employeeNumber}")]
+    public async Task<IActionResult> Patch(string employeeNumber, EmployeeDto dto)
     {
-        var employee = await _context.Employees.FindAsync(id);
+        var employee = await _context.Employees.FirstOrDefaultAsync(e => e.EmployeeNumber == employeeNumber);
 
         if (employee == null)
             return NotFound();
@@ -106,18 +106,18 @@ public class EmployeesController : ControllerBase
         // ❗ Do NOT update:
         // employee.EmployeeNumber
         // employee.DateOfBirth
-        // employee.ID
+        // employee.Number
 
         await _context.SaveChangesAsync();
 
         return Ok(employee);
     }
     
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("{employeeNumber}")]
+    public async Task<IActionResult> Delete(string employeeNumber)
     {
-        // Find employee by ID
-        var employee = await _context.Employees.FindAsync(id);
+        // Find employee by employeeNumber
+        var employee = await _context.Employees.FindAsync(employeeNumber);
 
         // If not found, return 404
         if (employee == null)
@@ -130,6 +130,6 @@ public class EmployeesController : ControllerBase
         await _context.SaveChangesAsync();
 
         // Return success response
-        return Ok($"Employee with ID {id} deleted successfully.");
+        return Ok($"Employee with ID Number {employeeNumber} deleted successfully.");
     }
 }
