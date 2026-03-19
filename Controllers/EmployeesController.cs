@@ -137,4 +137,24 @@ public class EmployeesController : ControllerBase
 
         return Ok(employee);
     }
+    
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        // Find employee by ID
+        var employee = await _context.Employees.FindAsync(id);
+
+        // If not found, return 404
+        if (employee == null)
+            return NotFound();
+
+        // Remove employee from database
+        _context.Employees.Remove(employee);
+
+        // Save changes
+        await _context.SaveChangesAsync();
+
+        // Return success response
+        return Ok($"Employee with ID {id} deleted successfully.");
+    }
 }
