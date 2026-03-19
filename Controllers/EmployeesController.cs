@@ -23,6 +23,31 @@ public class EmployeesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(Employee employee)
     {
+        var missingFields = new List<string>();
+
+        // Collect missing/invalid fields
+
+        if (string.IsNullOrEmpty(employee.FirstName))
+            missingFields.Add("FirstName");
+
+        if (string.IsNullOrEmpty(employee.LastName))
+            missingFields.Add("LastName");
+
+        if (employee.DateOfBirth == default)
+            missingFields.Add("DateOfBirth");
+
+        if (employee.DailyRate <= 0)
+            missingFields.Add("DailyRate");
+
+        if (string.IsNullOrEmpty(employee.WorkingDays))
+            missingFields.Add("WorkingDays");
+
+        // If any required fields are missing, return all at once
+        if (missingFields.Count > 0)
+        {
+            return BadRequest($"Missing or invalid parameters: {string.Join(", ", missingFields)}");
+        }
+
         // Validate WorkingDays
         if (!_allowedWorkingDays.Contains(employee.WorkingDays))
         {
