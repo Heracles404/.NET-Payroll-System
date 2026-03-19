@@ -60,7 +60,8 @@ public class EmployeesController : ControllerBase
     public async Task<IActionResult> GetByEmployeeNumber(string employeeNumber)
     {
         // Find employee by employeeNumber
-        var employee = await _context.Employees.FindAsync(employeeNumber);
+        var employee = await _context.Employees
+            .FirstOrDefaultAsync(e => e.EmployeeNumber == employeeNumber);
 
         // If not found, return 404
         if (employee == null)
@@ -117,7 +118,8 @@ public class EmployeesController : ControllerBase
     public async Task<IActionResult> Delete(string employeeNumber)
     {
         // Find employee by employeeNumber
-        var employee = await _context.Employees.FindAsync(employeeNumber);
+        var employee = await _context.Employees
+            .FirstOrDefaultAsync(e => e.EmployeeNumber == employeeNumber);
 
         // If not found, return 404
         if (employee == null)
