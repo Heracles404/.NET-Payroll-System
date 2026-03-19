@@ -38,10 +38,23 @@ public class EmployeesController : ControllerBase
             ? employee.LastName.Substring(0, 3).ToUpper()
             : employee.LastName.ToUpper().PadRight(3, '*');
 
-        var random = new Random().Next(0, 99999).ToString("D5");
-        var dobFormatted = employee.DateOfBirth.ToString("ddMMMyyyy").ToUpper();
+        var rng = new Random();
+        string employeeNumber;
+        bool exists;
 
-        employee.EmployeeNumber = $"{prefix}-{random}-{dobFormatted}";
+        do
+        {
+            var random = rng.Next(0, 99999).ToString("D5");
+            var dobFormatted = employee.DateOfBirth.ToString("ddMMMyyyy").ToUpper();
+
+            employeeNumber = $"{prefix}-{random}-{dobFormatted}";
+
+            exists = await _context.Employees
+                .AnyAsync(e => e.EmployeeNumber == employeeNumber);
+
+        } while (exists);
+
+        employee.EmployeeNumber = employeeNumber;
 
         _context.Employees.Add(employee);
         await _context.SaveChangesAsync();
