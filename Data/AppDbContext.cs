@@ -15,6 +15,10 @@ public class AppDbContext: DbContext
         modelBuilder.Entity<Employee>()
             .Property(e => e.DateOfBirth)
             .HasColumnType("date");
+        
+        modelBuilder.Entity<Employee>()
+            .HasIndex(e => e.EmployeeNumber)
+            .IsUnique();
     }
     
     public DbSet<Employee> Employees => Set<Employee>();
