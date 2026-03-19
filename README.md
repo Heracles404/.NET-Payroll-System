@@ -1,4 +1,11 @@
 ﻿<h3>ASP.NET API</h3>
+>**Install dotnet tools globally (If cannot Run Migrations due to PATH Error)** </br>
+``>> dotnet tool install --global dotnet-ef``</br>
+
+>**Run Migrations** </br>
+``>> dotnet ef migrations add InitialCreate``</br>
+``>> dotnet ef database update``</br>
+
 >**Check Installed Packages** </br>
 ``>> dotnet list package``</br>
 
